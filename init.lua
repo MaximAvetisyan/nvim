@@ -112,33 +112,99 @@ require('lazy').setup({
     },
   },
 
-  { -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
+{ -- Theme inspired by Atom
+      'navarasu/onedark.nvim',
+--    priority = 1000,
+--    config = function()
+--      vim.cmd.colorscheme 'onedark'
+--    end,
+},
+{'projekt0n/github-nvim-theme', tag = 'v0.0.7',
+  config = function()
+  require("github-theme").setup({
+  theme_style = "dark",
+  function_style = "italic",
+  sidebars = {"qf", "vista_kind", "terminal", "packer"},
 
+  -- Change the "hint" color to the "orange" color, and make the "error" color bright red
+  colors = {hint = "orange", error = "#ff0000", bg = "#1e1e1e"},
+
+  -- Overwrite the highlight groups
+  overrides = function(c)
+    return {
+      htmlTag = {fg = c.red, bg = "#282c34", sp = c.hint, style = "underline"},
+      DiagnosticHint = {link = "LspDiagnosticsDefaultHint"},
+      -- this will remove the highlight groups
+      TSField = {},
+    }end
+  })
+  end
+},
+{'johnfrankmorgan/whitespace.nvim',
+    config = function ()
+        require('whitespace-nvim').setup({
+            -- configuration options and their defaults
+
+            -- `highlight` configures which highlight is used to display
+            -- trailing whitespace
+            highlight = 'DiffDelete',
+
+            -- `ignored_filetypes` configures which filetypes to ignore when
+            -- displaying trailing whitespace
+            ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help' },
+
+            -- `ignore_terminal` configures whether to ignore terminal buffers
+            ignore_terminal = true,
+        })
+
+        -- remove trailing whitespace with a keybinding
+        vim.keymap.set('n', '<Leader>t', require('whitespace-nvim').trim)
+    end
+},
  { -- Set lualine as statusline
   'nvim-lualine/lualine.nvim',
+  after = 'github-nvim-theme',
   -- See `:help lualine.txt`
   opts = {
    options = {
     icons_enabled = true,
-    theme = 'onedark',
-    component_separators = '|',
-    section_separators = '',
-   },
-   sections = {
+    theme = 'codedark',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {'filename'},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
-   },
   },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+},
  },
 
   { -- Add indentation guides even on blank lines
@@ -179,7 +245,7 @@ require('lazy').setup({
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
-
+  { 'nvim-treesitter/playground'}
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -201,7 +267,7 @@ require('lazy').setup({
 -- See `:help vim.o`
 
 -- Set highlight on search
-vim.o.hlsearch = true
+vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
