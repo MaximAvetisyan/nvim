@@ -339,6 +339,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>f", vim.cmd.Explore)
 vim.keymap.set("n", "<leader>y","\"+y")
 vim.keymap.set("v", "<leader>y","\"+y")
 vim.keymap.set("n", "<leader>o","o<Esc>")
@@ -360,6 +361,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case',
+      '--hidden',
+      '-i',
+    },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -368,7 +380,19 @@ require('telescope').setup {
     },
   },
 }
+-- Fuction to pass selected test to live grep
+function vim.getVisualSelection()
+	vim.cmd('noau normal! "vy"')
+	local text = vim.fn.getreg('v')
+	vim.fn.setreg('v', {})
 
+	text = string.gsub(text, "\n", "")
+	if #text > 0 then
+		return text
+	else
+		return ''
+	end
+end
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
@@ -384,6 +408,10 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>pf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('v', '<leader>ps', function()
+	local text = vim.getVisualSelection()
+	require('telescope.builtin').live_grep({ default_text = text })
+  end, { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>ph', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>ps', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 
@@ -391,7 +419,7 @@ vim.keymap.set('n', '<leader>ps', require('telescope.builtin').live_grep, { desc
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp',  'lua', 'python', 'help', 'vim' },
+  ensure_installed = { 'c', 'cpp',  'lua', 'python', 'help', 'vim', 'sql' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
