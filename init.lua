@@ -346,6 +346,8 @@ vim.keymap.set("n", "<leader>o","o<Esc>")
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git);
 vim.keymap.set("n", "<leader>gd", vim.cmd.Gvdiff);
+vim.keymap.set("n", "<leader>x", vim.cmd.bd);
+vim.keymap.set("n", "<leader>gb", vim.cmd.Gblame);
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
