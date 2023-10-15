@@ -41,7 +41,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
--- Install package manager
+--- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -71,7 +71,7 @@ require('lazy').setup({
   'mbbill/undotree',
 
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+--  'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -96,6 +96,13 @@ require('lazy').setup({
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   },
 
+
+
+
+
+
+
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
@@ -103,22 +110,47 @@ require('lazy').setup({
     opts = {
       -- See `:help gitsigns.txt`
       signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
+                add = { hl = "GitSignsAdd", text = "┃", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
+                change = { hl = "GitSignsChange", text = "┃", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
+                delete = { hl = "GitSignsDelete", text = "▶", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
+                topdelete = { hl = "GitSignsDelete", text = ">", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
+                changedelete = { hl = "GitSignsChange", text = "┃", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },     },
     },
+      signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+      numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
+      linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+      word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+      watch_gitdir = {
+        interval = 1000,
+        follow_files = true,
+      },
+      attach_to_untracked = true,
+      current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
+        delay = 1000,
+        ignore_whitespace = false,
+      },
+      current_line_blame_formatter_opts = {
+        relative_time = false,
+      },
+      sign_priority = 6,
+      update_debounce = 100,
+      status_formatter = nil, -- Use default
+      max_file_length = 40000,
+      preview_config = {
+        -- Options passed to nvim_open_win
+        border = "single",
+        style = "minimal",
+        relative = "cursor",
+        row = 0,
+        col = 1,
+      },
+      yadm = {
+        enable = false,
+      },
   },
-
-{ -- Theme inspired by Atom
-      'navarasu/onedark.nvim',
---    priority = 1000,
---    config = function()
---      vim.cmd.colorscheme 'onedark'
---    end,
-},
 {'projekt0n/github-nvim-theme', tag = 'v0.0.7',
   config = function()
   require("github-theme").setup({
@@ -213,7 +245,7 @@ require('lazy').setup({
     -- See `:help indent_blankline.txt`
     opts = {
       char = '┊',
-      show_trailing_blankline_indent = false,
+      show_trailing_blankline_indent = true,
     },
   },
 
@@ -267,7 +299,7 @@ require('lazy').setup({
 -- See `:help vim.o`
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
@@ -278,8 +310,6 @@ vim.o.mouse = 'a'
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
-vim.opt.smartindent = true
-
 vim.opt.wrap = false
 
 vim.opt.swapfile = false
@@ -289,9 +319,7 @@ vim.opt.undofile = true
 
 vim.opt.incsearch = true
 
-vim.opt.termguicolors = true
-
-vim.opt.scrolloff = 999
+vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
@@ -299,14 +327,6 @@ vim.opt.isfname:append("@-@")
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
-
--- Enable break indent
-vim.o.breakindent = true
-
-vim.opt.tabstop = 1
-vim.opt.softtabstop = 1
-vim.opt.shiftwidth = 1
-vim.opt.expandtab = true
 
 -- Save undo history
 vim.o.undofile = true
@@ -348,6 +368,10 @@ vim.keymap.set("n", "<leader>gs", vim.cmd.Git);
 vim.keymap.set("n", "<leader>gd", vim.cmd.Gvdiff);
 vim.keymap.set("n", "<leader>x", vim.cmd.bd);
 vim.keymap.set("n", "<leader>gb", vim.cmd.Gblame);
+vim.keymap.set("n", "yf", ":%y+<CR>", { desc = 'Copy the whole file to clipboard' });
+vim.keymap.set("n", "yy","^vg_y")
+vim.keymap.set("i", "ii","<Esc>")
+vim.keymap.set("n", "f","*")
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -416,6 +440,7 @@ vim.keymap.set('v', '<leader>ps', function()
   end, { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>ph', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>ps', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -625,6 +650,12 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-
+-- Indent Settings
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 3
+vim.opt.tabstop = 3
+vim.opt.softtabstop = 3
+vim.opt.smartindent = true
+vim.opt.wrap = true
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
