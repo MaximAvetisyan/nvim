@@ -1,41 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, and understand
-  what your configuration is doing.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-  And then you can explore or search through `:help lua-guide`
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -70,9 +32,6 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
   'mbbill/undotree',
 
-  -- Detect tabstop and shiftwidth automatically
---  'tpope/vim-sleuth',
-
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   { -- LSP Configuration & Plugins
@@ -95,14 +54,6 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   },
-
-
-
-
-
-
-
-
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
@@ -328,9 +279,6 @@ vim.opt.isfname:append("@-@")
 --  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
 
--- Save undo history
-vim.o.undofile = true
-
 -- Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true
@@ -359,7 +307,6 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-vim.keymap.set("n", "<leader>f", vim.cmd.Explore)
 vim.keymap.set("n", "<leader>y","\"+y")
 vim.keymap.set("v", "<leader>y","\"+y")
 vim.keymap.set("n", "<leader>o","o<Esc>")
@@ -370,8 +317,8 @@ vim.keymap.set("n", "<leader>x", vim.cmd.bd);
 vim.keymap.set("n", "<leader>gb", vim.cmd.Gblame);
 vim.keymap.set("n", "yf", ":%y+<CR>", { desc = 'Copy the whole file to clipboard' });
 vim.keymap.set("n", "yy","^vg_y")
-vim.keymap.set("i", "ii","<Esc>")
-vim.keymap.set("n", "f","*")
+vim.keymap.set("n", "<leader>f","*")
+vim.keymap.set("x", "<leader>p", [["_dP]])
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -446,12 +393,12 @@ vim.keymap.set('n', '<leader>ps', require('telescope.builtin').live_grep, { desc
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp',  'lua', 'python', 'help', 'vim', 'sql' },
+  ensure_installed = { 'c', 'cpp',  'lua', 'python', 'help', 'vim', 'go'},
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
-  highlight = { enable = true },
+  highlight = { enable = true }, -- Highlight is disabled cuz it removes propper sql higlight for Oracle sql files and large packages
   indent = { enable = true, disable = { 'python' } },
   incremental_selection = {
     enable = true,
