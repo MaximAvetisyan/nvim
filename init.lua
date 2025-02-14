@@ -55,73 +55,117 @@ require('lazy').setup({
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   },
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
-  { -- Adds git releated signs to the gutter, as well as utilities for managing changes
+{ 'folke/which-key.nvim', opts = {} },
+{ "rose-pine/neovim",
+  name = "rose-pine",
+  lazy = false,
+  priority = 1000,
+  config = function()
+    require("rose-pine").setup({
+      variant = "main", -- auto, main, moon, or dawn
+      dark_variant = "main", -- main, moon, or dawn
+      dim_inactive_windows = true,
+      extend_background_behind_borders = true,
+      enable = {
+          terminal = true,
+          legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
+          migrations = true, -- Handle deprecated options automatically
+      },
+
+      styles = {
+          bold = false,
+          italic = false,
+          transparency = false,
+      },
+
+      palette = {
+           main = {
+               base = '#000000',
+           },
+      },
+
+      highlight_groups = {
+          -- Comment = { fg = "foam" },
+          -- VertSplit = { fg = "muted", bg = "muted" },
+      },
+
+      before_highlight = function(group, highlight, palette)
+      end
+})
+      vim.cmd.colorscheme("rose-pine")
+      end,
+},
+{
+  "ray-x/go.nvim",
+  dependencies = {  -- optional packages
+    "ray-x/guihua.lua",
+    "neovim/nvim-lspconfig",
+    "nvim-treesitter/nvim-treesitter",
+  },
+  config = function()
+    require("go").setup()
+  end,
+  event = {"CmdlineEnter"},
+  ft = {"go", 'gomod'},
+  build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
+},
+--{
+--    "gmr458/vscode_modern_theme.nvim",
+--    lazy = false,
+--    priority = 1000,
+--    config = function()
+--        require("vscode_modern").setup({
+--            cursorline = true,
+--            transparent_background = false,
+--            nvim_tree_darker = true,
+--        })
+--        vim.cmd.colorscheme("vscode_modern")
+--    end,
+--},
+{ -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       -- See `:help gitsigns.txt`
-      signs = {
-                add = { hl = "GitSignsAdd", text = "┃", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
-                change = { hl = "GitSignsChange", text = "┃", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
-                delete = { hl = "GitSignsDelete", text = "▶", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
-                topdelete = { hl = "GitSignsDelete", text = ">", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
-                changedelete = { hl = "GitSignsChange", text = "┃", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },     },
-    },
-      signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-      numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
-      linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
-      word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-      watch_gitdir = {
-        interval = 1000,
-        follow_files = true,
-      },
-      attach_to_untracked = true,
-      current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
-      current_line_blame_opts = {
-        virt_text = true,
-        virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
-        delay = 1000,
-        ignore_whitespace = false,
-      },
-      current_line_blame_formatter_opts = {
-        relative_time = false,
-      },
-      sign_priority = 6,
-      update_debounce = 100,
-      status_formatter = nil, -- Use default
-      max_file_length = 40000,
-      preview_config = {
-        -- Options passed to nvim_open_win
-        border = "single",
-        style = "minimal",
-        relative = "cursor",
-        row = 0,
-        col = 1,
-      },
-      yadm = {
-        enable = false,
-      },
+ signs = {
+    add          = { text = '┃' },
+    change       = { text = '┃' },
+    delete       = { text = '┃' },
+    topdelete    = { text = '┃' },
+    changedelete = { text = '┃' },
+    untracked    = { text = '┃' },
   },
-{'projekt0n/github-nvim-theme', tag = 'v0.0.7',
-  config = function()
-  require("github-theme").setup({
-  theme_style = "dark",
-  function_style = "italic",
-  sidebars = {"qf", "vista_kind", "terminal", "packer"},
-
-  -- Change the "hint" color to the "orange" color, and make the "error" color bright red
-  colors = {hint = "orange", error = "#ff0000", bg = "#1e1e1e"},
-
-  -- Overwrite the highlight groups
-  overrides = function(c)
-    return {
-      htmlTag = {fg = c.red, bg = "#282c34", sp = c.hint, style = "underline"},
-      DiagnosticHint = {link = "LspDiagnosticsDefaultHint"},
-      -- this will remove the highlight groups
-      TSField = {},
-    }end
-  })
-  end
+  signs_staged_enable = true,
+  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  watch_gitdir = {
+    follow_files = true
+  },
+  auto_attach = true,
+  attach_to_untracked = false,
+  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay = 1000,
+    ignore_whitespace = false,
+    virt_text_priority = 100,
+    use_focus = true,
+  },
+  current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+  sign_priority = 6,
+  update_debounce = 100,
+  status_formatter = nil, -- Use default
+  preview_config = {
+    -- Options passed to nvim_open_win
+    border = 'single',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+}
 },
 {'johnfrankmorgan/whitespace.nvim',
     config = function ()
@@ -146,12 +190,12 @@ require('lazy').setup({
 },
  { -- Set lualine as statusline
   'nvim-lualine/lualine.nvim',
-  after = 'github-nvim-theme',
+  dependencies = { 'nvim-tree/nvim-web-devicons' },
   -- See `:help lualine.txt`
   opts = {
    options = {
     icons_enabled = true,
-    theme = 'codedark',
+    theme = 'rose-pine',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
@@ -169,7 +213,8 @@ require('lazy').setup({
   },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_b = {'branch', 'diff'--, 'diagnostics'
+        },
     lualine_c = {'filename'},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
@@ -192,14 +237,15 @@ require('lazy').setup({
 
   { -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
+     main='ibl',
+    ---@module "ibl"
+    ---@type ibl.config
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = true,
-    },
+       indent = { char = "┊" },
+       scope = { enabled = false },
+           },
   },
-
+  {'nvim-java/nvim-java'},
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
@@ -311,11 +357,12 @@ vim.keymap.set("n", "<leader>y","\"+y")
 vim.keymap.set("v", "<leader>y","\"+y")
 vim.keymap.set("n", "<leader>o","o<Esc>")
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
-vim.keymap.set("n", "<leader>gs", vim.cmd.Git);
+vim.keymap.set("n", "<leader>gs", function() vim.cmd('vert Git') end);
 vim.keymap.set("n", "<leader>gd", vim.cmd.Gvdiff);
 vim.keymap.set("n", "<leader>x", vim.cmd.bd);
-vim.keymap.set("n", "<leader>gb", vim.cmd.Gblame);
+vim.keymap.set("n", "<leader>gb", function() vim.cmd('Git blame') end);
 vim.keymap.set("n", "yf", ":%y+<CR>", { desc = 'Copy the whole file to clipboard' });
+vim.keymap.set("n", "<leader>m", ":let @*=expand('%:p')<CR>")
 vim.keymap.set("n", "yy","^vg_y")
 vim.keymap.set("n", "<leader>f","*")
 vim.keymap.set("x", "<leader>p", [["_dP]])
@@ -328,6 +375,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
   group = highlight_group,
   pattern = '*',
+})
+
+local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+   require('go.format').gofmt()
+  end,
+  group = format_sync_grp,
 })
 
 -- [[ Configure Telescope ]]
@@ -393,12 +449,11 @@ vim.keymap.set('n', '<leader>ps', require('telescope.builtin').live_grep, { desc
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp',  'lua', 'python', 'help', 'vim', 'go'},
+  ensure_installed = { 'c', 'cpp',  'lua', 'python', 'vim', 'go', 'java', 'sql' },
 
-  -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
-  highlight = { enable = true }, -- Highlight is disabled cuz it removes propper sql higlight for Oracle sql files and large packages
+  highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
   incremental_selection = {
     enable = true,
@@ -460,7 +515,8 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
-
+require('java').setup()
+require'lspconfig'.jdtls.setup{}
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -513,11 +569,11 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
 
+  gopls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -599,9 +655,9 @@ cmp.setup {
 }
 -- Indent Settings
 vim.opt.expandtab = true
-vim.opt.shiftwidth = 3
-vim.opt.tabstop = 3
-vim.opt.softtabstop = 3
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
 vim.opt.smartindent = true
 vim.opt.wrap = true
 -- The line beneath this is called `modeline`. See `:help modeline`
