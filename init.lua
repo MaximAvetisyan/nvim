@@ -85,5 +85,15 @@ require('gitsigns').setup{
             col = 1
         },
 }
--- Enable telescope fzf native, if installed
+
+local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+ pattern = "*.go",
+ callback = function()
+  require('go.format').gofmt()
+ end,
+ group = format_sync_grp,
+})
+
+--Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
