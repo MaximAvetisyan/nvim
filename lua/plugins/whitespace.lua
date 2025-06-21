@@ -9,7 +9,7 @@ return {'johnfrankmorgan/whitespace.nvim',
 
             -- `ignored_filetypes` configures which filetypes to ignore when
             -- displaying trailing whitespace
-            ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help' },
+            ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'fzf', 'fzf-lua'},
 
             -- `ignore_terminal` configures whether to ignore terminal buffers
             ignore_terminal = true,

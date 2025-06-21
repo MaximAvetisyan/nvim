@@ -95,5 +95,3 @@ vim.api.nvim_create_autocmd("BufWritePre", {
  group = format_sync_grp,
 })
 
---Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
