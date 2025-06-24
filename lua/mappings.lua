@@ -19,13 +19,9 @@ vim.keymap.set("n", "<leader>m", ":let @+=expand('%:p')<CR>", { desc = 'Copy ful
 vim.keymap.set("n", "yy","^vg_y")
 vim.keymap.set("n", "<leader>f","*")
 vim.keymap.set("x", "<leader>p", [["_dP]])
-
-vim.keymap.set({ "n", "v", "i" }, "<leader><leader>",
-  function() require("fzf-lua").buffers() end,
-  { silent = true, desc = "Fuzz current buffers" })
-vim.keymap.set({ "n", "v", "i" }, "<leader>pf",
-  function() require("fzf-lua").files() end,
-  { silent = true, desc = "Fuzz all buffers" })
-vim.keymap.set({ "n", "v", "i" }, "<leader>ps",
-  function() require("fzf-lua").live_grep() end,
-  { silent = true, desc = "Live grep" })
+vim.keymap.set("n", "<leader><leader>", function() require("fzf-lua").buffers() end, { silent = true, desc = "Fuzz current buffers" })
+vim.keymap.set("n", "<leader>pf", function() require("fzf-lua").files() end, { silent = true, desc = "Fuzz all buffers" })
+vim.keymap.set("n", "<leader>ps", function() require("fzf-lua").live_grep() end, { silent = true, desc = "Live grep" })
+vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions     jump1=true ignore_current_line=true<cr>", { silent = true, desc = "Goto Definition"} )
+vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references      jump1=true ignore_current_line=true<cr>", {desc = "References", nowait = true })
+vim.keymap.set("n", "gi", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", {desc = "Goto Implementation" })
